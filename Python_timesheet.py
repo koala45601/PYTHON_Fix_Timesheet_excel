@@ -72,7 +72,7 @@ w2.option_add("*Font","impact 15")
 #    show_view.heading(4, text='Remark')
 #    show_view.pack(padx=5, pady=5)
 
-#treeview W1 frame
+#treeview W1 frame and Treeview Timesheet
 treeview_1=ttk.Treeview(w1)
 
 treeview_1["columns"]=("Excel","NO","Date","Day","PN","Remark")
@@ -93,7 +93,7 @@ treeview_1.heading("PN", text="Project Name",anchor=tk.W)
 treeview_1.heading("Remark", text="Remark",anchor=tk.W)
 treeview_1.pack()
 
-#treeview frame2
+#treeview frame2 and Treeview Expense
 treeview_2=ttk.Treeview(w3)
 
 treeview_2["columns"]=("Excel","NO","Day","Month","Description","Type","Local_Currenct" )
