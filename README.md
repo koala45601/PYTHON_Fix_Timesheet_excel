@@ -3,7 +3,7 @@ Excel write to python
 
 This program is designed to edit Excel and to provide examples of editing files. Is there a way to install it to run The program is as described below.
 
-1.Install package 
+ 1.Install package 
 
     1.1 openpyxl
  
