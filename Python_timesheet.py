@@ -655,7 +655,9 @@ spinbox_2.grid(row=1, column=1)
 text_descipt_1 =Entry(w4, text='',font=("Helvetica", 15))
 text_descipt_1.grid(row=2, column=1, stick='we')
 
-spinbox_3 = Spinbox(w4, from_=1, to=6,font=("Helvetica", 15) )
+defalut_1 = StringVar(excel)
+defalut_1.set(int(4))
+spinbox_3 = Spinbox(w4, from_=1, to=6,font=("Helvetica", 15),textvariable=defalut_1 )
 spinbox_3.grid(row=3, column=1)
 
 text_Currency = Entry(w4, font=("Helvetica", 15))
@@ -675,35 +677,121 @@ def add_row():
     global count_total_2
 
     for add_row12 in range(1,2):
-        cal_4=datetime.datetime(2021, count_mount_1, count_day_2 )
+        cal_4=datetime.datetime(2021, wa_3.cell(row=4,column=17).value, count_day_2 )
         cal4_result= cal_4.strftime('%d')
         cal41_result = cal_4.strftime('%w')
+
         if cal41_result == str(1) or cal41_result == str(2) or cal41_result == str(3) or cal41_result == str(4) or cal41_result == str(5) :
-            treeview_2.insert('', 'end',iid=count_2,values=(count_excel_2, count_NO_2, cal4_result,count_mount_1, text_descipt_1.get(),spinbox_3.get(),text_Currency.get()))
+            treeview_2.insert('', 'end',iid=count_2,values=(count_excel_2, count_NO_2, cal4_result,wa_3.cell(row=4, column=17).value, text_descipt_1.get(),spinbox_3.get(),text_Currency.get()))
             count_total_2 = count_total_2+int(text_Currency.get())
             lb_total_currency_2.config(text=f'Total Currency: {count_total_2} THB')
-            wa['A'+str(count_excel_2)] = cal41_result
-            wa['B'+str(count_excel_2)] = count_mount_1
-            wa['H'+str(count_excel_2)] = text_descipt_1.get()
-            wa['I'+str(count_excel_2)] = spinbox_3.get()
-            wa['K'+str(count_excel_2)] = text_Currency.get()
+            wa_2['A'+str(count_excel_2)] = cal41_result
+            wa_2['B'+str(count_excel_2)] = count_mount_1
+            wa_2['D'+str(count_excel_2)] = text_descipt_1.get()
+            wa_2['I'+str(count_excel_2)] = spinbox_3.get()
+            wa_2['K'+str(count_excel_2)] = text_Currency.get()
             count_2 += 1
             count_excel_2 += 1
             count_NO_2 += 1
+            if count_excel_2 == 29:
+                break
 
-        elif cal41_result == str(0) or cal41_result == str(6):
-            print('Holiday and Please Enter  next row')
+        count_day_2 += 1
 
-        count_day_2 +=1
+def ex_excel_all():
+    global count_2
+    global count_NO_2
+    global count_excel_2
+    global count_mount_2
+    global count_day_2
+    global count_mount_1
+    global count_total_2
+
+    for x_04 in range(1,30):
+        treeview_2.insert('', 'end', iid=count_2, values=(count_excel_2, count_NO_2, wa_2.cell(row=count_excel_2,column=1).value, wa_2.cell(row=count_excel_2,column=2).value, wa_2.cell(row=count_excel_2,column=4).value, wa_2.cell(row=count_excel_2,column=9).value, wa_2.cell(row=count_excel_2,column=11).value))
+        count_excel_2+=1
+        count_2+=1
+        count_NO_2 +=1
+        #print(wa_2.cell(row=count_excel_2,column=11))
+        if count_excel_2 == 29:
+            break
+
+def update_excell():
+    global count_2
+    global count_NO_2
+    global count_excel_2
+    global count_mount_2
+    global count_day_2
+    global count_mount_1
+    global count_total_2
+
+    edit2_1=treeview_2.focus()
+    value2_1=treeview_2.item(edit2_1, 'values')
+    treeview_2.item(edit2_1, values=(value2_1[0],str(edit2_1),value2_1[2], value2_1[3], text_descipt_1.get(),spinbox_3.get() ,text_Currency.get()))
+    #wa['A'+str(value_1[0])]=select_4.get()
+    #wa['B'+str(value_1[0])]=select_3.get()
+    #text_descipt_1.config(text=value2_1[4])
+    wa_2['D'+str(value2_1[0])]= text_descipt_1.get()
+    wa_2['K'+str(value2_1[0])]= int(text_Currency.get())
+    #print(wa['K'+str(count_add_row)].value)
+    #print(wa['L'+str(count_add_row)].value)
+    #print(value_1[0])
+
+def show_detail():
+    select_5 = treeview_2.focus()
+    cal_7 = treeview_2.item(select_5, 'values')
+
+    #spinbox_1.insert(0, cal_7[2])
+    #spinbox_2.insert(0, cal_7[3])
+    text_descipt_1.insert(0, cal_7[4])
+    text_Currency.insert(0, cal_7[5])
 
 
+def delete_one():
+    edit2_2 = treeview_2.focus()
+    value2_2 = treeview_2.item(edit2_2, 'values')
+    #cell2_ex1 = wa['K' + str(count_excel_No)]
+    treeview_2.item(edit2_2, values=(value2_2[0],value2_2[1],"","", "", "",""))
+    wa['A' + str(value2_2[0])] = ""
+    wa['B' + str(value2_2[0])] = ""
+    wa['D' + str(value2_2[0])] = ""
+    wa['I' + str(value2_2[0])] = ""
+    wa['K' + str(value2_2[0])] = ""
 
+def delete_all():
+    global count_2
+    global count_NO_2
+    global count_excel_2
+    global count_mount_2
+    global count_day_2
+    global count_mount_1
+    global count_total_2
+
+    for re2_1 in treeview_2.get_children():
+        treeview_2.delete(re2_1)
+        #wa['K'+str(count_add_row)]=""
+        #wa['L'+str(count_add_row)]=""
+        #count_add_row+=1
+        count_2=1
+        count_NO_2=1
+        count_excel_2=8
+        count_day_2=1
+        count_total_2 = 0
+        count_add_row = 10
+        #lb_1.config(text="")
+        #if count_add_row == wa['L40']:
+         #   break
+
+def save_file_2():
+    wd_2.save('Expense Form_Ratchanon_2.xlsx')
 
 btn2_add_row_2 = Button(w4, text='ADD Column',command=add_row).grid(row=5, column=0,stick='nw',padx=12,pady=12)
-btn2_update = Button(w4,text="UPDATE SECECT ROW").grid(row=5,column=1,stick='nw',padx=12,pady=12)
+btn2_update = Button(w4,text="UPDATE SECECT ROW",command=update_excell).grid(row=5,column=1,stick='nw',padx=12,pady=12)
+btn2_Add_excell_all = Button(w4,text="ADD EXCEL FILE",command=ex_excel_all).grid(row=5,column=2,padx=12,pady=12, stick='nw')
+btn_delete_one = Button(w4, text="Delete ROW",command=delete_one).grid(row=3,column=3,padx=12,pady=12,stick='nw')
+btn_delete_All = Button(w4, text="Delete All",command=delete_all).grid(row=5,column=3,padx=12,pady=12,stick='nw')
+btn_Save_2 = Button(w4,text="SAVE FILE",command=save_file_2).grid(row=4,column=3,padx=12,pady=12,stick='nw')
+select_data = Button(w3, text="SELECT DATA",command=show_detail).pack(side=RIGHT)
 excel.title("TIME SHEET")
 excel.geometry("850x850")
 excel.mainloop()
-
-
-
