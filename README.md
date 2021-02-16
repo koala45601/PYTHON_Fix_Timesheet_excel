@@ -15,5 +15,4 @@ This program is designed to edit Excel and to provide examples of editing files.
 
 4. Program is want to excel file !.
 
-User Guilde
-1.
+Status : COMPLETE 16/2/2021
