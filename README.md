@@ -10,7 +10,9 @@ This program is designed to edit Excel and to provide examples of editing files.
      1.2 tkinter
  
 2. Copy Code Timesheet_python.py
+
 3. Fix line 26,29 [path:name(EX. E:\Temp\Ratchanon_TimeSheet.xlsx)]
+
 4. Program is want to excel file !.
 
 User Guilde
