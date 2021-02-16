@@ -29,6 +29,9 @@ wa = wd.active
 wd_2 = load_workbook('Expense Form_Ratchanon.xlsx')
 wa_2 = wd_2.active
 
+wd_3 = load_workbook('Ratchanon_TimeSheet.xlsx')
+wa_3 = wd_3.active
+
 style_1 = ttk.Style()
 style_1.configure("Treeview",
                   background = "silver",
@@ -708,7 +711,7 @@ def ex_excel_all():
     global count_total_2
 
     for x_04 in range(1,30):
-        treeview_2.insert('', 'end', iid=count_2, values=(count_excel_2, count_NO_2, wa_2.cell(row=count_excel_2,column=1).value, wa_2.cell(row=count_excel_2,column=2).value, wa_2.cell(row=count_excel_2,column=4).value, wa_2.cell(row=count_excel_2,column=9).value, wa_2.cell(row=count_excel_2,column=11).value))
+        treeview_2.insert('', 'end', iid=count_2, values=(count_excel_2, count_NO_2, wa_2.cell(row=count_excel_2,column=1).value, wa_3.cell(row=4,column=17).value, wa_2.cell(row=count_excel_2,column=4).value, wa_2.cell(row=count_excel_2,column=9).value, wa_2.cell(row=count_excel_2,column=11).value))
         count_excel_2+=1
         count_2+=1
         count_NO_2 +=1
