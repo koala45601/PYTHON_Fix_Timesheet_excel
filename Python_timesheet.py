@@ -534,7 +534,7 @@ def ADD_F_All_Ex():
 
 lb_m_1=Label(w1, text="Mont Time sheet :").pack(padx=5,pady=5,side=LEFT)
 lb_K4 = Label(w1, text='')
-lb.K4.pack(side= Right)
+lb_K4.pack(side = LEFT)
 s_m_1=Entry(w1,width=3)
 s_m_1.pack(side=LEFT,padx=10,pady=10)
 
@@ -543,8 +543,11 @@ def select_mont_1():
     global count_day_1
     global count_excel_No
     global count_mount_1
+    time_3 = datetime.datetime(2021, int(s_m_1.get()),1)
+    cal_5 = time_3.strftime('%b')
     wa['Q4'] = int(s_m_1.get())
-    wa['K4'] = str(s_m_t.get()) + '/' + str(1) + '/' + str(2021)
+    wa['K4'] = str(cal_5)+' ' + str(2021)
+    #print(wa.cell(row=4,column=11).value)
     lb_K4.config(text=wa.cell(row=4, column=11).value)
     lb_2.config(text="Mont: "+str(wa.cell(row=4,column=17).value))
     s_m_1.delete(0,END)
