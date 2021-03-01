@@ -1,6 +1,6 @@
 ('e:\\python\\lib\\site-packages\\pyinstaller-4.2-py3.9.egg',
  None,
- {'*.pyd', '*.py', 'EGG-INFO', '*.cp39-win_amd64.pyd', '*.pyw', '*.pyc'},
+ {'*.py', '*.pyw', '*.pyc', '*.cp39-win_amd64.pyd', 'EGG-INFO', '*.pyd'},
  'DATA',
  [('PyInstaller\\utils\\pytest.ini',
    'e:\\python\\lib\\site-packages\\pyinstaller-4.2-py3.9.egg\\PyInstaller\\utils\\pytest.ini',
