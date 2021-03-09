@@ -9,12 +9,11 @@ from tkinter import StringVar
 from openpyxl.styles import PatternFill
 from tkinter import ttk
 import tkinter as tk
-import pywin32_system32 as pywin
-from getpass import *
 import os
 import time
 from openpyxl.styles import PatternFill
 import datetime
+from openpyxl.drawing.image import Image
 from tkcalendar import DateEntry
 
 # ตัวแปรหลัก ต่างๆ
@@ -23,14 +22,17 @@ excel = Tk()
 tab_1=ttk.Notebook(excel)
 tab_1.pack(fill='both',expand='yes')
 #load workbook----------------------------------------------------------------------------------------------------------
-wd = load_workbook('Ratchanon_TimeSheet.xlsx')
+wd = load_workbook('Temp\Ratchanon_TimeSheet.xlsx')
 wa = wd.active
 
-wd_2 = load_workbook('Expense Form_Ratchanon.xlsx')
+wd_2 = load_workbook('Temp\Expense Form_Ratchanon.xlsx')
 wa_2 = wd_2.active
 
-wd_3 = load_workbook('Ratchanon_TimeSheet1.xlsx')
+wd_3 = load_workbook('Temp\Ratchanon_TimeSheet1.xlsx')
 wa_3 = wd_3.active
+
+logo = Image('Temp\Logo.jpg')
+#signature = Image('Temp\signature.jpg')
 
 style_1 = ttk.Style()
 style_1.configure("Treeview",
@@ -483,14 +485,18 @@ def ADD_F_All_Ex():
             cell_R = wa.cell(row=count_row, column=12).value
             cell_Pro = wa.cell(row=count_row, column=11).value
             cell_Date = wa.cell(row=count_row, column=20).value
-            treeview_1.insert("", 'end', iid=count_1,values=(count_excel_No,count_NO, cell_Date,cal_result, cell_Pro,cell_R))
-            wa['A'+str(count_excel_No)]=cal_result
-            wa['B'+str(count_excel_No)]=count_day_1
-            wa['K'+str(count_excel_No)]=cell_Pro
-            wa['L'+str(count_excel_No)]=cell_R
-            if cal_result == 'Sat' and cal_result == 'Sun' :
-                wa['k'+str(count_excel_No)]= ' '
-                wa['L'+str(count_excel_No)]= ' '
+            if cal_result in ('Mon','Tue','Wed','Thu','Fri'):
+                treeview_1.insert("", 'end', iid=count_1,values=(count_excel_No,count_NO, cell_Date,cal_result, cell_Pro,cell_R))
+                wa['A'+str(count_excel_No)]=cal_result
+                wa['B'+str(count_excel_No)]=count_day_1
+                wa['K'+str(count_excel_No)]=cell_Pro
+                wa['L'+str(count_excel_No)]=cell_R
+            elif cal_result in ('Sat','Sun') :
+                wa['A'+str(count_excel_No)]=cal_result
+                wa['B'+str(count_excel_No)]=count_day_1
+                wa['K'+str(count_excel_No)]=''
+                wa['L'+str(count_excel_No)]=''
+
             count_1+=1
             count_NO+=1
             count_row+=1
@@ -498,6 +504,7 @@ def ADD_F_All_Ex():
 #            print("Count Excel: "+str(count_NO))
             if count_NO <= 28:
                 count_day_1 +=1
+
             elif count_excel_No == 41:
                 break
 
@@ -506,11 +513,12 @@ def ADD_F_All_Ex():
             cell_R = wa.cell(row=count_row, column=12).value
             cell_Pro = wa.cell(row=count_row, column=11).value
             cell_Date = wa.cell(row=count_row, column=20).value
-            treeview_1.insert("", 'end', iid=count_1,
+            if cal_result in ('Mon','Tue','Wed','Thu','Fri'):
+                treeview_1.insert("", 'end', iid=count_1,
                                   values=(count_excel_No, count_NO, cell_Date, cal_result, cell_Pro, cell_R))
-            wa['A' + str(count_excel_No)] = cal_result
-            wa['K' + str(count_excel_No)] = cell_Pro
-            wa['L' + str(count_excel_No)] = cell_R
+                wa['A' + str(count_excel_No)] = cal_result
+                wa['K' + str(count_excel_No)] = cell_Pro
+                wa['L' + str(count_excel_No)] = cell_R
             if cal_result == 'Sat' and cal_result == 'Sun' :
                 wa['k'+str(count_excel_No)]= ' '
                 wa['L'+str(count_excel_No)]= ' '            
@@ -529,10 +537,11 @@ def ADD_F_All_Ex():
             cell_R = wa.cell(row=count_row, column=12).value
             cell_Pro = wa.cell(row=count_row, column=11).value
             cell_Date = wa.cell(row=count_row, column=20).value
-            treeview_1.insert("", 'end', iid=count_1,values=(count_excel_No, count_NO, cell_Date, cal_result, cell_Pro, cell_R))
-            wa['A' + str(count_excel_No)] = cal_result
-            wa['K' + str(count_excel_No)] = cell_Pro
-            wa['L' + str(count_excel_No)] = cell_R
+            if cal_result in ('Mon','Tue','Wed','Thu','Fri') :
+                treeview_1.insert("", 'end', iid=count_1,values=(count_excel_No, count_NO, cell_Date, cal_result, cell_Pro, cell_R))
+                wa['A' + str(count_excel_No)] = cal_result
+                wa['K' + str(count_excel_No)] = cell_Pro
+                wa['L' + str(count_excel_No)] = cell_R
             if cal_result == 'Sat' and cal_result == 'Sun' :
                 wa['k'+str(count_excel_No)]= ' '
                 wa['L'+str(count_excel_No)]= ' '
@@ -580,8 +589,17 @@ def up_sig_date():
 
 #save File and check file is duplicate
 def save_file():
+    save_time_1 =time.strftime('%Y')
+    time_45 = datetime.datetime(2021, int(wa.cell(row=4, column=17).value), 1)
+    time_5 = time_45.strftime('%b')
+    #print(time_5)
+
+
     leave_color()
-    wd.save('Ratchanon_TimeSheet1.xlsx')
+    wa.add_image(logo,'A1')
+    #wa.add_image(signature,'C43')
+    wd.save(f'Temp\save\Ratchanon_TimeSheet_Ratchanon_{time_5}.xlsx')
+    wd.save('Temp\Ratchanon_TimeSheet_Ratchanon1')
 
 
 #remove all Treeview and no delelte data in file excel (Ratchanon_Timesheet.xsls)
@@ -766,21 +784,33 @@ def ex_excel_all():
                 count_day_2 += 1
                 count_excel_r1 +=1
 
-            elif (cal_expanday == '1' or wa_3.cell(row=count_excel_r1,column=12).value != 'Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Sick Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Holiday' ) \
-                or (cal_expanday == '2' or wa_3.cell(row=count_excel_r1,column=12).value != 'Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Sick Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Holiday' )\
-                or (cal_expanday == '3' or wa_3.cell(row=count_excel_r1,column=12).value != 'Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Sick Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Holiday' )  \
-                or (cal_expanday == '4' or wa_3.cell(row=count_excel_r1,column=12).value != 'Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Sick Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Holiday' )  \
-                or (cal_expanday == '5' or wa_3.cell(row=count_excel_r1,column=12).value != 'Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Sick Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Holiday' )  :
+            elif (cal_expanday == '1' or wa_3.cell(row=count_excel_r1,column=12).value in ( 'Leave', 'Sick Leave', 'Holiday' )) \
+                or (cal_expanday == '2' or wa_3.cell(row=count_excel_r1,column=12).value in ( 'Leave', 'Sick Leave', 'Holiday' ))\
+                or (cal_expanday == '3' or wa_3.cell(row=count_excel_r1,column=12).value in ( 'Leave', 'Sick Leave', 'Holiday' ))  \
+                or (cal_expanday == '4' or wa_3.cell(row=count_excel_r1,column=12).value in ( 'Leave', 'Sick Leave', 'Holiday' ))  \
+                or (cal_expanday == '5' or wa_3.cell(row=count_excel_r1,column=12).value in ('Leave', 'Sick Leave', 'Holiday' )):
                 treeview_2.insert('', 'end', iid=count_2, values=(count_excel_2, count_NO_2, wa_3.cell(row = count_excel_r1,column=2).value, wa_3.cell(row=4,column=17).value, wa_2.cell(row=count_excel_2,column=4).value, wa_2.cell(row=count_excel_2,column=9).value, wa_2.cell(row=count_excel_2,column=11).value))
                # count_total_2 = count_total_2 + int(wa_2.cell(row=count_excel_r1,column=11).value)
                 #lb_total_currency_2.config(count_total_2)
-                print(str(count_day_2)+' Date :'+cal_expandate+' Remark: '+str(wa_3.cell(row=count_excel_r1,column=12).value))
+               # print(str(count_day_2)+' Date :'+cal_expandate+' Remark: '+str(wa_3.cell(row=count_excel_r1,column=12).value))
+                wa_2[f'A{count_excel_2}'] = count_day_2
+                wa_2[f'B{count_excel_2}'] = int(wa_3.cell(row=4,column=17).value)
+                #wa_2[f'I{int(count_excel_2)}'] = wa_2.cell(row=count_excel_2,column=8).value
+                wa_2[f'K{count_excel_2}'] = wa_2.cell(row=count_excel_2,column=11).value
+
                 count_excel_2+=1
                 count_2+=1
                 count_NO_2 +=1
                 count_excel_r1 +=1
+                print(count_day_2)
                 if count_day_1 <= 28:
                     count_day_2 += 1
+                    if count_day_1 == 28:
+                        wa_3[f'A{count_excel_2}'] =''
+                        wa_3[f'B{count_excel_2}'] = ''
+                        wa_3[f'D{count_excel_2}'] = ''
+                        wa_3[f'I{count_excel_2}'] = ''
+                        wa_3[f'K{count_excel_2}'] = ''
             #print(wa_2.cell(row=count_excel_2,column=11))
             if count_day_2 == 29:
                 break
@@ -794,18 +824,33 @@ def ex_excel_all():
                 count_day_2 += 1
                 count_excel_r1 +=1
 
-            elif (cal_expanday == '1' or wa_3.cell(row=count_excel_r1,column=12).value != 'Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Sick Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Holiday' ) \
-                or (cal_expanday == '2' or wa_3.cell(row=count_excel_r1,column=12).value != 'Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Sick Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Holiday' )\
-                or (cal_expanday == '3' or wa_3.cell(row=count_excel_r1,column=12).value != 'Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Sick Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Holiday' )  \
-                or (cal_expanday == '4' or wa_3.cell(row=count_excel_r1,column=12).value != 'Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Sick Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Holiday' )  \
-                or (cal_expanday == '5' or wa_3.cell(row=count_excel_r1,column=12).value != 'Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Sick Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Holiday' )  :
+            elif (cal_expanday == '1' or wa_3.cell(row=count_excel_r1,column=12).value in ( 'Leave', 'Sick Leave', 'Holiday' )) \
+                or (cal_expanday == '2' or wa_3.cell(row=count_excel_r1,column=12).value in ( 'Leave', 'Sick Leave', 'Holiday' ))\
+                or (cal_expanday == '3' or wa_3.cell(row=count_excel_r1,column=12).value in ( 'Leave', 'Sick Leave', 'Holiday' ))  \
+                or (cal_expanday == '4' or wa_3.cell(row=count_excel_r1,column=12).value in ( 'Leave', 'Sick Leave', 'Holiday' ))  \
+                or (cal_expanday == '5' or wa_3.cell(row=count_excel_r1,column=12).value in ('Leave', 'Sick Leave', 'Holiday' )):
                 treeview_2.insert('', 'end', iid=count_2, values=(count_excel_2, count_NO_2, wa_3.cell(row = count_excel_r1,column=2).value, wa_3.cell(row=4,column=17).value, wa_2.cell(row=count_excel_2,column=4).value, wa_2.cell(row=count_excel_2,column=9).value, wa_2.cell(row=count_excel_2,column=11).value))
-                print(str(count_day_2)+' Date :'+cal_expandate+' Remark: '+str(wa_3.cell(row=count_excel_r1,column=12).value))
+               # count_total_2 = count_total_2 + int(wa_2.cell(row=count_excel_r1,column=11).value)
+                #lb_total_currency_2.config(count_total_2)
+               # print(str(count_day_2)+' Date :'+cal_expandate+' Remark: '+str(wa_3.cell(row=count_excel_r1,column=12).value))
+                wa_2[f'A{count_excel_2}'] = count_day_2
+                wa_2[f'B{count_excel_2}'] = int(wa_3.cell(row=4,column=17).value)
+                #wa_2[f'I{int(count_excel_2)}'] = wa_2.cell(row=count_excel_2,column=8).value
+                wa_2[f'K{count_excel_2}'] = wa_2.cell(row=count_excel_2,column=11).value
+
                 count_excel_2+=1
                 count_2+=1
                 count_NO_2 +=1
-                count_day_2 += 1
                 count_excel_r1 +=1
+                print(count_day_2)
+                if count_day_1 <= 30:
+                    count_day_2 += 1
+                    if count_day_1 == 30:
+                        wa_3[f'A{count_excel_2}'] =''
+                        wa_3[f'B{count_excel_2}'] = ''
+                        wa_3[f'D{count_excel_2}'] = ''
+                        wa_3[f'I{count_excel_2}'] = ''
+                        wa_3[f'K{count_excel_2}'] = ''
             #print(wa_2.cell(row=count_excel_2,column=11))
             if count_day_2 == 30:
                 break
@@ -819,19 +864,33 @@ def ex_excel_all():
                 count_day_2 += 1
                 count_excel_r1 +=1
 
-            elif (cal_expanday == '1' or wa_3.cell(row=count_excel_r1,column=12).value != 'Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Sick Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Holiday' ) \
-                or (cal_expanday == '2' or wa_3.cell(row=count_excel_r1,column=12).value != 'Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Sick Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Holiday' )\
-                or (cal_expanday == '3' or wa_3.cell(row=count_excel_r1,column=12).value != 'Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Sick Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Holiday' )  \
-                or (cal_expanday == '4' or wa_3.cell(row=count_excel_r1,column=12).value != 'Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Sick Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Holiday' )  \
-                or (cal_expanday == '5' or wa_3.cell(row=count_excel_r1,column=12).value != 'Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Sick Leave' or wa_3.cell(row=count_excel_r1,column=12).value != 'Holiday' )  :
+            elif (cal_expanday == '1' or wa_3.cell(row=count_excel_r1,column=12).value in ( 'Leave', 'Sick Leave', 'Holiday' )) \
+                or (cal_expanday == '2' or wa_3.cell(row=count_excel_r1,column=12).value in ( 'Leave', 'Sick Leave', 'Holiday' ))\
+                or (cal_expanday == '3' or wa_3.cell(row=count_excel_r1,column=12).value in ( 'Leave', 'Sick Leave', 'Holiday' ))  \
+                or (cal_expanday == '4' or wa_3.cell(row=count_excel_r1,column=12).value in ( 'Leave', 'Sick Leave', 'Holiday' ))  \
+                or (cal_expanday == '5' or wa_3.cell(row=count_excel_r1,column=12).value in ('Leave', 'Sick Leave', 'Holiday' )):
                 treeview_2.insert('', 'end', iid=count_2, values=(count_excel_2, count_NO_2, wa_3.cell(row = count_excel_r1,column=2).value, wa_3.cell(row=4,column=17).value, wa_2.cell(row=count_excel_2,column=4).value, wa_2.cell(row=count_excel_2,column=9).value, wa_2.cell(row=count_excel_2,column=11).value))
-                print(str(count_day_2)+' Date :'+cal_expandate+' Remark: '+str(wa_3.cell(row=count_excel_r1,column=12).value))
-                wa_3.cell
+               # count_total_2 = count_total_2 + int(wa_2.cell(row=count_excel_r1,column=11).value)
+                #lb_total_currency_2.config(count_total_2)
+               # print(str(count_day_2)+' Date :'+cal_expandate+' Remark: '+str(wa_3.cell(row=count_excel_r1,column=12).value))
+                wa_2[f'A{count_excel_2}'] = count_day_2
+                wa_2[f'B{count_excel_2}'] = int(wa_3.cell(row=4,column=17).value)
+                #wa_2[f'I{int(count_excel_2)}'] = wa_2.cell(row=count_excel_2,column=8).value
+                wa_2[f'K{count_excel_2}'] = wa_2.cell(row=count_excel_2,column=11).value
+
                 count_excel_2+=1
                 count_2+=1
                 count_NO_2 +=1
-                count_day_2 += 1
                 count_excel_r1 +=1
+                print(count_day_2)
+                if count_day_1 <= 31:
+                    count_day_2 += 1
+                    if count_day_1 == 31:
+                        wa_3[f'A{count_excel_2}'] =''
+                        wa_3[f'B{count_excel_2}'] = ''
+                        wa_3[f'D{count_excel_2}'] = ''
+                        wa_3[f'I{count_excel_2}'] = ''
+                        wa_3[f'K{count_excel_2}'] = ''
             #print(wa_2.cell(row=count_excel_2,column=11))
             if count_day_2 == 31:
                 break
@@ -854,6 +913,7 @@ def update_excell():
     #text_descipt_1.config(text=value2_1[4])
     wa_2['D'+str(value2_1[0])]= text_descipt_1.get()
     wa_2['K'+str(value2_1[0])]= int(text_Currency.get())
+    wa_2[f'I{value2_1[0]}']   = int(defalut_1.get())
     #print(wa['K'+str(count_add_row)].value)
     #print(wa['L'+str(count_add_row)].value)
     #print(value_1[0])
@@ -917,7 +977,7 @@ def delete_all():
          #   break
 
 def save_file_2():
-    wd_2.save('Expense Form_Ratchanon_2.xlsx')
+    wd_2.save('Temp\save\Expense Form_Ratchanon_2.xlsx')
 
 btn2_add_row_2 = Button(w4, text='ADD Column',command=add_row).grid(row=5, column=0,stick='nw',padx=12,pady=12)
 btn2_update = Button(w4,text="UPDATE SECECT ROW",command=update_excell).grid(row=5,column=1,stick='nw',padx=12,pady=12)
