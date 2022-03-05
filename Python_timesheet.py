@@ -14,7 +14,7 @@ import time
 from openpyxl.styles import PatternFill
 import datetime
 from openpyxl.drawing.image import Image
-from tkcalendar import DateEntry
+#from tkcalendar import DateEntry
 
 # ตัวแปรหลัก ต่างๆ
 excel = Tk()
@@ -22,16 +22,17 @@ excel = Tk()
 tab_1=ttk.Notebook(excel)
 tab_1.pack(fill='both',expand='yes')
 #load workbook----------------------------------------------------------------------------------------------------------
-wd = load_workbook('Temp\Ratchanon_TimeSheet.xlsx')
+
+wd = load_workbook('Ratchanon_TimeSheet.xlsx')
 wa = wd.active
 
-wd_2 = load_workbook('Temp\Expense Form_Ratchanon.xlsx')
+wd_2 = load_workbook('Expense_Form_Ratchanon.xlsx')
 wa_2 = wd_2.active
 
-wd_3 = load_workbook('Temp\Ratchanon_TimeSheet1.xlsx')
+wd_3 = load_workbook('Ratchanon_TimeSheet1.xlsx')
 wa_3 = wd_3.active
 
-logo = Image('Temp\Logo.jpg')
+logo = Image('Logo.jpg')
 #signature = Image('Temp\signature.jpg')
 
 style_1 = ttk.Style()
